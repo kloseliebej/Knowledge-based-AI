@@ -35,171 +35,97 @@ class Agent:
 
     def objectRelation(self, object1, object2):
         relation = {}
+        sizemap = {'very small': 0, 'small': 1, 'medium':2, 'large':3, 'very large': 4, 'huge': 5}
         for attributeName in object1.attributes:
-            if(attributeName == 'shape' and 'shape' in object2.attributes):
-                if(object1.attributes['shape'] == object2.attributes['shape']):
+            if attributeName == 'shape' and 'shape' in object2.attributes:
+                if object1.attributes['shape'] == object2.attributes['shape']:
                     relation['shape'] = 1
                 else:
                     relation['shape'] = 0
-            if(attributeName == 'fill' and 'fill' in object2.attributes):
-                if(object1.attributes['fill'] == object2.attributes['fill']):
+            if attributeName == 'fill' and 'fill' in object2.attributes:
+                if object1.attributes['fill'] == object2.attributes['fill']:
                     relation['fill'] = 1
                 else:
                     relation['fill'] = 0
-            if(attributeName == 'size' and 'size' in object2.attributes):
-                if(object1.attributes['size'] == object2.attributes['size']):
+            if attributeName == 'size' and 'size' in object2.attributes:
+                if object1.attributes['size'] == object2.attributes['size']:
                     relation['size'] = 1
                 else:
-                    if(object1.attributes['size'] == 'very small'):
-                        size1 = 0
-                    elif(object1.attributes['size'] == 'small'):
-                        size1 = 1
-                    elif(object1.attributes['size'] == 'medium'):
-                        size1 = 2
-                    elif(object1.attributes['size'] == 'large'):
-                        size1 = 3
-                    elif(object1.attributes['size'] == 'very large'):
-                        size1 = 4
-                    elif(object1.attributes['size'] == 'huge'):
-                        size1 = 5
-                    if(object2.attributes['size'] == 'very small'):
-                        size2 = 0
-                    elif(object2.attributes['size'] == 'small'):
-                        size2 = 1
-                    elif(object2.attributes['size'] == 'medium'):
-                        size2 = 2
-                    elif(object2.attributes['size'] == 'large'):
-                        size2 = 3
-                    elif(object2.attributes['size'] == 'very large'):
-                        size2 = 4
-                    elif(object2.attributes['size'] == 'huge'):
-                        size2 = 5
-                    
-                    if(size1 < size2):
-                        relation['size'] = 0
-                    else:
-                        relation['size'] = -1
-            if(attributeName == 'angle' and 'angle' in object2.attributes):
+                    size1 = sizemap[object1.attributes['size']]
+                    size2 = sizemap[object2.attributes['size']]
+                    relation['size'] = 0 if size1 < size2 else -1
+
+            if attributeName == 'angle' and 'angle' in object2.attributes:
                 
-                if(object1.attributes['angle'] == object2.attributes['angle']):
+                if object1.attributes['angle'] == object2.attributes['angle']:
                     relation['angle'] = 1
-                elif(object1.attributes['shape'] == 'pac-man' and object2.attributes['shape'] == 'pac-man'):
-                    if((object1.attributes['angle'] == '45' and object2.attributes['angle'] == '135') or (object2.attributes['angle'] == '45' and object1.attributes['angle'] == '135')):
+                elif object1.attributes['shape'] == 'pac-man' and object2.attributes['shape'] == 'pac-man':
+                    if (object1.attributes['angle'] == '45' and object2.attributes['angle'] == '135') or (object2.attributes['angle'] == '45' and object1.attributes['angle'] == '135'):
                         relation['angle'] = 'reflection'
-                    elif((object1.attributes['angle'] == '315' and object2.attributes['angle'] == '225') or (object2.attributes['angle'] == '315' and object1.attributes['angle'] == '225')):
+                    elif (object1.attributes['angle'] == '315' and object2.attributes['angle'] == '225') or (object2.attributes['angle'] == '315' and object1.attributes['angle'] == '225'):
                         relation['angle'] = 'reflection'
-                    elif((object1.attributes['angle'] == '180' and object2.attributes['angle'] == '0') or (object2.attributes['angle'] == '180' and object1.attributes['angle'] == '0')):
+                    elif (object1.attributes['angle'] == '180' and object2.attributes['angle'] == '0') or (object2.attributes['angle'] == '180' and object1.attributes['angle'] == '0'):
                         relation['angle'] = 'reflection'
-                elif(object1.attributes['shape'] == 'right triangle' and object2.attributes['shape'] == 'right triangle'):
-                    if((object1.attributes['angle'] == '270' and object2.attributes['angle'] == '0') or (object2.attributes['angle'] == '270' and object1.attributes['angle'] == '0')):
+                elif object1.attributes['shape'] == 'right triangle' and object2.attributes['shape'] == 'right triangle':
+                    if (object1.attributes['angle'] == '270' and object2.attributes['angle'] == '0') or (object2.attributes['angle'] == '270' and object1.attributes['angle'] == '0'):
                         relation['angle'] = 'reflection'
-                    elif((object1.attributes['angle'] == '180' and object2.attributes['angle'] == '90') or (object2.attributes['angle'] == '180' and object1.attributes['angle'] == '90')):
+                    elif (object1.attributes['angle'] == '180' and object2.attributes['angle'] == '90') or (object2.attributes['angle'] == '180' and object1.attributes['angle'] == '90'):
                         relation['angle'] = 'reflection'
                 else: 
                     relation['angle'] = int(object2.attributes['angle'])-int(object1.attributes['angle'])
-            if(attributeName == 'alignment' and 'alignment' in object2.attributes):
+            if attributeName == 'alignment' and 'alignment' in object2.attributes:
                 ali1 = object1.attributes['alignment']
                 ali2 = object2.attributes['alignment']
                 #unchanged
-                if(ali1 == ali2):
+                if ali1 == ali2:
                     relation['alignment'] = 1
                 #move left 
-                elif((ali1 == 'bottom-right' and ali2 == 'bottom-left') or (ali1 == 'top-right' and ali2 == 'top-left')):
+                elif (ali1 == 'bottom-right' and ali2 == 'bottom-left') or (ali1 == 'top-right' and ali2 == 'top-left'):
                     relation['alignment'] = 2
                 #move right
-                elif((ali1 == 'bottom-left' and ali2 == 'bottom-right') or (ali1 == 'top-left' and ali2 == 'top-right')):
+                elif (ali1 == 'bottom-left' and ali2 == 'bottom-right') or (ali1 == 'top-left' and ali2 == 'top-right'):
                     relation['alignment'] = 3
                 #move top
-                elif((ali1 == 'bottom-right' and ali2 == 'top-right') or (ali1 == 'bottom-left' and ali2 == 'top-left')):
+                elif (ali1 == 'bottom-right' and ali2 == 'top-right') or (ali1 == 'bottom-left' and ali2 == 'top-left'):
                     relation['alignment'] = 4
                 #move down
-                elif((ali1 == 'top-right' and ali2 == 'bottom-right') or (ali1 == 'top-left' and ali2 == 'bottom-left')):
+                elif (ali1 == 'top-right' and ali2 == 'bottom-right') or (ali1 == 'top-left' and ali2 == 'bottom-left'):
                     relation['alignment'] = 5
                 #move from bottom left to top right
-                elif(ali1 == 'bottom-left' and ali2 == 'top-right'):
+                elif ali1 == 'bottom-left' and ali2 == 'top-right':
                     relation['alignment'] = 6
                 #move from top left to bottom right
-                elif(ali1 == 'top-left' and ali2 == 'bottom-right'):
+                elif ali1 == 'top-left' and ali2 == 'bottom-right':
                     relation['alignment'] = 7
                 #move from top right to bottom left
-                elif(ali1 == 'top-right' and ali2 == 'bottom-left'):
+                elif ali1 == 'top-right' and ali2 == 'bottom-left':
                     relation['alignment'] = 8
                 #move from top left to bottom right
-                elif(ali1 == 'top-left' and ali2 == 'bottom-right'):
+                elif ali1 == 'top-left' and ali2 == 'bottom-right':
                     relation['alignment'] = 9
                 else:
                     relation['alignment'] = 10
                     
-            if(attributeName == 'width' and 'width' in object2.attributes):
+            if attributeName == 'width' and 'width' in object2.attributes:
                 if(object1.attributes['width'] == object2.attributes['width']):
                     relation['width'] = 1
                 else:
-                    if(object1.attributes['width'] == 'very small'):
-                        width1 = 0
-                    elif(object1.attributes['width'] == 'small'):
-                        width1 = 1
-                    elif(object1.attributes['width'] == 'medium'):
-                        width1 = 2
-                    elif(object1.attributes['width'] == 'large'):
-                        width1 = 3
-                    elif(object1.attributes['width'] == 'very large'):
-                        width1 = 4
-                    elif(object1.attributes['width'] == 'huge'):
-                        width1 = 5
-                    if(object2.attributes['width'] == 'very small'):
-                        width2 = 0
-                    elif(object2.attributes['width'] == 'small'):
-                        width2 = 1
-                    elif(object2.attributes['width'] == 'medium'):
-                        width2 = 2
-                    elif(object2.attributes['width'] == 'large'):
-                        width2 = 3
-                    elif(object2.attributes['width'] == 'very large'):
-                        width2 = 4
-                    elif(object2.attributes['width'] == 'huge'):
-                        width2 = 5
-                        
-                    if(width1 < width2):
-                        relation['width'] = -1
-                    else:
-                        relation['width'] = 0
-            if(attributeName == 'height' and 'height' in object2.attributes):
-                if(object1.attributes['height'] == object2.attributes['height']):
+                    width1 = sizemap[object1.attributes['width']]
+                    width2 = sizemap[object2.attributes['width']]
+                    relation['width'] = -1 if width1 < width2 else 0 
+
+            if attributeName == 'height' and 'height' in object2.attributes:
+                if object1.attributes['height'] == object2.attributes['height']:
                     relation['height'] = 1
                 else:
-                    if(object1.attributes['height'] == 'very small'):
-                        height1 = 0
-                    elif(object1.attributes['height'] == 'small'):
-                        height1 = 1
-                    elif(object1.attributes['height'] == 'medium'):
-                        height1 = 2
-                    elif(object1.attributes['height'] == 'large'):
-                        height1 = 3
-                    elif(object1.attributes['height'] == 'very large'):
-                        height1 = 4
-                    elif(object1.attributes['height'] == 'huge'):
-                        height1 = 5
-                    if(object2.attributes['height'] == 'very small'):
-                        height2 = 0
-                    elif(object2.attributes['height'] == 'small'):
-                        height2 = 1
-                    elif(object2.attributes['height'] == 'medium'):
-                        height2 = 2
-                    elif(object2.attributes['height'] == 'large'):
-                        height2 = 3
-                    elif(object2.attributes['height'] == 'very large'):
-                        height2 = 4
-                    elif(object2.attributes['height'] == 'huge'):
-                        height2 = 5
-                        
-                    if(height1 < height2):
-                        relation['height'] = -1
-                    else:
-                        relation['height'] = 0
-            if(attributeName == 'alignmentx' and 'alignmentx' in object2.attributes): 
+                    height1 = sizemap[object1.attributes['height']]
+                    height2 = sizemap[object2.attributes['height']]
+                    relation['height'] = -1 if height1 < heigh2 else 0
+
+            if attributeName == 'alignmentx' and 'alignmentx' in object2.attributes: 
                 a1 = object1.attributes['alignmentx']
                 a2 = object2.attributes['alignmentx']
-                if(a1 == a2):
+                if a1 == a2:
                     relation['alignmentx'] = 'NotMove'
                 elif (a1-a2) == -2:
                     relation['alignmentx'] = 'MoveD2'
@@ -209,10 +135,10 @@ class Agent:
                     relation['alignmentx'] = 'MoveU1'
                 elif (a1-a2) == 2:  
                     relation['alignmentx'] = 'MoveU2'
-            if(attributeName == 'alignmenty' and 'alignmenty' in object2.attributes): 
+            if attributeName == 'alignmenty' and 'alignmenty' in object2.attributes: 
                 a1 = object1.attributes['alignmenty']
                 a2 = object2.attributes['alignmenty']
-                if(a1 == a2):
+                if a1 == a2:
                     relation['alignmenty'] = 'NotMove'
                 elif (a1-a2) == -2:
                     relation['alignmenty'] = 'MoveR2'
@@ -228,21 +154,21 @@ class Agent:
 
     
     def isEqualAttributes(self, attribute1, attribute2):
-        if (len(attribute1) != len(attribute2)):
+        if len(attribute1) != len(attribute2):
             return 0
         
         for attributeName in attribute1:
-            if(attributeName not in attribute2):
+            if attributeName not in attribute2:
                 return 0
             else:
-                if(attribute1[attributeName] != attribute2[attributeName]):
-                    if(attributeName == "shape" or attributeName == "fill" or attributeName == "size" or attributeName == "angle" or attributeName == "alignment" or attributeName == "width" or attributeName == "height" or attributeName == "alignmentx" or attributeName == "alignmenty"):
+                if attribute1[attributeName] != attribute2[attributeName]:
+                    if attributeName == "shape" or attributeName == "fill" or attributeName == "size" or attributeName == "angle" or attributeName == "alignment" or attributeName == "width" or attributeName == "height" or attributeName == "alignmentx" or attributeName == "alignmenty":
                         return 0
                 
         return 1
     
     def isSimilarAttributes(self, attribute1, attribute2):
-        if (len(attribute1) != len(attribute2)):
+        if len(attribute1) != len(attribute2):
             return 0
         if 'width' in attribute1 and 'height' in attribute1 and 'width' in attribute2:
             if (attribute1['shape'] == attribute2['shape']) and (attribute1['fill'] == attribute2['fill']):
@@ -262,7 +188,7 @@ class Agent:
         pairnum = 0
         for objectName in figure1.objects:
             for objectName2 in figure2.objects:
-                if( self.isEqualAttributes(figure1.objects[objectName].attributes, figure2.objects[objectName2].attributes) == 1):
+                if self.isEqualAttributes(figure1.objects[objectName].attributes, figure2.objects[objectName2].attributes) == 1:
                     pairnum = pairnum + 1
                     Relationtemp = figure1.objects[objectName].attributes
                     Relation.append(Relationtemp)
@@ -277,18 +203,18 @@ class Agent:
     def FindRelationsMultiObjects(self, figure1, figure2): 
         
         pairRelation = self.FindMatchedPair(figure1, figure2)
-        if(len(figure1.objects) > len(figure2.objects)):
+        if len(figure1.objects) > len(figure2.objects):
             
             pairRelation.append('delete')
             for objectName1 in figure1.objects:
-                if(objectName1 not in self.matchpair):
+                if objectName1 not in self.matchpair:
                     pairRelation.append(figure1.objects[objectName1].attributes)
             pairRelation.append(len(figure1.objects)-len(figure2.objects))
             return pairRelation
         else:
             for objectName1 in figure1.objects:
                 for objectName2 in figure2.objects:
-                    if(objectName1 not in self.matchpair and objectName2 not in self.matchpair):
+                    if objectName1 not in self.matchpair and objectName2 not in self.matchpair:
                         pairRelation.append(self.objectRelation(figure1.objects[objectName1], figure2.objects[objectName2]))
                         
             
@@ -303,7 +229,7 @@ class Agent:
 
     
     def SolveHelper(self, bool_oneObject, problem, direction):
-        if(bool_oneObject == 1):
+        if bool_oneObject == 1:
             relationAB = {}
             for objectName in problem.figures['A'].objects:
                 objecta = problem.figures['A'].objects[objectName]
@@ -311,156 +237,72 @@ class Agent:
                 objectb = problem.figures['B'].objects[objectName]
             for objectName in problem.figures['C'].objects:
                 objectc = problem.figures['C'].objects[objectName]
-            if (direction == 1):
+            if direction == 1:
                 relationAB = self.objectRelation(objecta,objectb) 
             else:
                 relationAB = self.objectRelation(objecta,objectc)   
-#             print("relationAB")
-#             print(relationAB)
+
             for index in range(1,7):
                 relationAns = {}
                 for objectName in problem.figures[str(index)].objects:
                     objectAns = problem.figures[str(index)].objects[objectName]
-                if (direction == 1):
+                if direction == 1:
                     relationAns = self.objectRelation(objectc,objectAns)     
                 else:
                     relationAns = self.objectRelation(objectb,objectAns) 
-#                 print("relationAns")
-#                 print(relationAns)
-
-                if relationAns['shape'] != relationAB['shape']:
-                    self.existingAnswers = self.existingAnswers - 1
-                    self.possibleAnswers[index-1] = 0
-                    if self.existingAnswers == 1:
-                        return self.findAns()
-                else:
-                    if 'size' in relationAns and 'size' in relationAB and relationAns['size'] != relationAB['size']:
-                        self.existingAnswers = self.existingAnswers - 1
+                attributes = ['shape', 'size', 'fill', 'angle', 'alignment']
+                for attribute in attributes:
+                    if attribute in relationAns and attribute not in relationAB or relationAns[attribute] != relationAB[attribute]:
+                        self.existingAnswers -= 1
                         self.possibleAnswers[index-1] = 0
                         if self.existingAnswers == 1:
-                            return self.findAns()   
-                    else:
-                        if 'fill' in relationAns and 'fill' in relationAB and relationAns['fill'] != relationAB['fill']:
-                            self.existingAnswers = self.existingAnswers - 1
-                            self.possibleAnswers[index-1] = 0
-                            if self.existingAnswers == 1:
-                                return self.findAns() 
-                        else:
-                            if 'angle' in relationAB:
-                                if 'angle' not in relationAns:
-                                    self.existingAnswers = self.existingAnswers - 1
-                                    self.possibleAnswers[index-1] = 0
-                                    if self.existingAnswers == 1:
-                                        return self.findAns() 
-                                else: 
-                                    if relationAB['angle'] == 1 and relationAns['angle'] != 1:
-                                        self.existingAnswers = self.existingAnswers - 1
-                                        self.possibleAnswers[index-1] = 0
-                                        if self.existingAnswers == 1:
-                                            return self.findAns() 
-                                    elif relationAB['angle'] == 'reflection':
-                                        if(relationAns['angle'] != 'reflection'):
-                                            self.existingAnswers = self.existingAnswers - 1
-                                            self.possibleAnswers[index-1] = 0
-                                            if self.existingAnswers == 1:
-                                                return self.findAns()
-                                    else:
-                                        #if relationAB['angle'] >= 180  or relationAB['angle'] <= -180:
-                                        if relationAB['angle'] != relationAns['angle']:
-                                            self.existingAnswers = self.existingAnswers - 1
-                                            self.possibleAnswers[index-1] = 0
-                                            if self.existingAnswers == 1:
-                                                return self.findAns() 
-#                                         else:
-#                                             if relationAB['angle'] != -relationAns['angle']:
-#                                                 self.existingAnswers = self.existingAnswers - 1
-#                                                 self.possibleAnswers[index-1] = 0
-#                                                 if self.existingAnswers == 1:
-#                                                     return self.findAns()
-
-
-                            if 'alignment' in relationAB:
-                                if 'alignment' not in relationAns:
-                                    self.existingAnswers = self.existingAnswers - 1
-                                    self.possibleAnswers[index-1] = 0
-                                    if self.existingAnswers == 1:
-                                        return self.findAns()
-                                    
-                                else:
-                                    if relationAB['alignment'] != relationAns['alignment']:
-                                        self.existingAnswers = self.existingAnswers - 1
-                                        self.possibleAnswers[index-1] = 0
-                                        if self.existingAnswers == 1:
-                                            return self.findAns() 
-#                                     elif relationAB['alignment'] == 2 and relationAns['alignment'] != 3:
-#                                         self.existingAnswers = self.existingAnswers - 1
-#                                         self.possibleAnswers[index-1] = 0
-#                                         if self.existingAnswers == 1:
-#                                             return self.findAns() 
-#                                     elif relationAB['alignment'] == 3 and relationAns['alignment'] != 2:
-#                                         self.existingAnswers = self.existingAnswers - 1
-#                                         self.possibleAnswers[index-1] = 0
-#                                         if self.existingAnswers == 1:
-#                                             return self.findAns()
-#                                     elif relationAB['alignment'] == 4 and relationAns['alignment'] != 5:
-#                                         self.existingAnswers = self.existingAnswers - 1
-#                                         self.possibleAnswers[index-1] = 0
-#                                         if self.existingAnswers == 1:
-#                                             return self.findAns()   
-#                                     elif relationAB['alignment'] == 5 and relationAns['alignment'] != 4:
-#                                         self.existingAnswers = self.existingAnswers - 1
-#                                         self.possibleAnswers[index-1] = 0
-#                                         if self.existingAnswers == 1:
-#                                             return self.findAns()
-
+                            return self.findAns()
+                        break
 
         else:
             MultiRelationAB = self.FindRelationsMultiObjects(problem.figures['A'],problem.figures['B'])
             unchangeObjNum = MultiRelationAB[0]
             MultiRelationAB_length = len(MultiRelationAB)
             
-#             print ("MR")
-#             print (MultiRelationAB)
             for index in range(1,7):
                 self.matchpair = []
                 CurrentRelation = self.FindRelationsMultiObjects(problem.figures['C'],problem.figures[str(index)])  
                 currentUnchangeObjNum = CurrentRelation[0]  
-#                 print ("CR")
-#                 print (CurrentRelation)
+
                 #all objects unchanged
-                if(MultiRelationAB_length == (unchangeObjNum+1)):
+                if MultiRelationAB_length == (unchangeObjNum+1):
                     if unchangeObjNum == CurrentRelation[0]:
                         correctnum = 0
                         for i in range(unchangeObjNum):
-                            if(self.isEqualAttributes(MultiRelationAB[i+1], CurrentRelation[i+1])): 
+                            if self.isEqualAttributes(MultiRelationAB[i+1], CurrentRelation[i+1]): 
                                 correctnum = correctnum + 1
-                        if(correctnum == unchangeObjNum):
+                        if correctnum == unchangeObjNum:
                             return index
                 #some objects change
                 
                 else:
                     #some objects deleted
-                    if("delete" in MultiRelationAB):
+                    if "delete" in MultiRelationAB:
                         deletenum = MultiRelationAB[MultiRelationAB_length-1]
-                        if("delete" in CurrentRelation and deletenum == CurrentRelation[len(CurrentRelation)-1]):
+                        if "delete" in CurrentRelation and deletenum == CurrentRelation[len(CurrentRelation)-1]:
                                 equal = 0
                                 for dele in range(deletenum):
                                     attribute_delete = MultiRelationAB[MultiRelationAB_length-dele-2]
                                     for same in range(CurrentRelation[0]):
                                         attribute_same = CurrentRelation[same+1]
-                                        if(self.isEqualAttributes(attribute_delete, attribute_same)):
+                                        if self.isEqualAttributes(attribute_delete, attribute_same):
                                             equal = 1
-                                if(equal == 0): 
+                                if equal == 0: 
                                     return index
                     #no objects delete
                     else:
                         changeRelationNum = MultiRelationAB_length - unchangeObjNum - 1
-                        if(len(CurrentRelation) >= (changeRelationNum+currentUnchangeObjNum+1) and "delete" not in CurrentRelation):
+                        if len(CurrentRelation) >= (changeRelationNum+currentUnchangeObjNum+1) and "delete" not in CurrentRelation:
                             correctnum2 = 0
                             for i in range(changeRelationNum):
-                                if(self.isEqualAttributes(MultiRelationAB[i+unchangeObjNum+1], CurrentRelation[i+currentUnchangeObjNum+1])):
+                                if self.isEqualAttributes(MultiRelationAB[i+unchangeObjNum+1], CurrentRelation[i+currentUnchangeObjNum+1]):
                                     correctnum2 = correctnum2 + 1
-                            if(correctnum2 == changeRelationNum):
+                            if correctnum2 == changeRelationNum:
                                 return index
                             
         return -1
@@ -488,33 +330,22 @@ class Agent:
     
     def SolveChangeN3x3(self,problem):
         relationAB = self.FindRelationsMultiObjectsAddition(problem.figures['A'], problem.figures['B'])   
-        #print(relationAB)
         relationDE = self.FindRelationsMultiObjectsAddition(problem.figures['D'], problem.figures['E'])
-        #print(relationDE)
         relationGH = self.FindRelationsMultiObjectsAddition(problem.figures['G'], problem.figures['H'])
-        #print(relationGH)
         relationBC = self.FindRelationsMultiObjectsAddition(problem.figures['B'], problem.figures['C'])
-        #print(relationBC)
         relationEF = self.FindRelationsMultiObjectsAddition(problem.figures['E'], problem.figures['F'])
-        #print(relationEF)
         
         relationSet = [relationAB, relationDE, relationGH, relationBC, relationEF]
         
         Scores = [0,0,0,0,0,0,0,0]
         for i in range(8):
             if self.possibleAnswers3x3[i] == 1:
-                #print("Answer" + str(i+1) + " Relation = ")
                 #generate relation
                 relationAns = self.FindRelationsMultiObjectsAddition(problem.figures['H'], problem.figures[str(i+1)])
-                #print(relationAns)
                 #evaluate
                 Scores[i] = self.Evaluate3x3Addition(relationAns,relationSet)
-                
             else:
                 Scores[i] = -1
-#         for i in range(8):
-#             print("Answer" + str(i+1) + " Score = ")    
-#             print(Scores[i])
         return self.PickHighestScore(Scores)
             
     def SolveRec(self, problem):
@@ -605,10 +436,6 @@ class Agent:
                     del move.attributes['overlaps']
                 elif 'overlaps' in center.attributes:
                     del center.attributes['overlaps']
-#             print("center")
-#             print(center.attributes)
-#             print("move")
-#             print(move.attributes)
                        
         return self.SolveChangeN3x3(problem)
         
@@ -719,8 +546,6 @@ class Agent:
         
     def Evaluate3x3Addition(self,relationAns,relationSet):
         score = 0
-        #print("relationAns is : ")
-        #print(relationAns)
         if relationSet[0]['modify'] != 0:
             div1 = relationSet[3]['modify']/relationSet[0]['modify']
         else:
@@ -1075,10 +900,10 @@ class Agent:
                 if self.possibleAnswers3x3[i]:
                     return i+1
         
-        if(Objectslen[0] == Objectslen[1] == Objectslen[2]):#N unchange
+        if Objectslen[0] == Objectslen[1] == Objectslen[2]:#N unchange
             if Objectslen[0] > 2:
                 return -1
-            elif(problemHasRec):
+            elif problemHasRec:
                 return self.SolveRec(problem)
             elif problemHasLeft and (problemHasAbove or problemHasOver):
                 return self.SolveAlign(problem)
@@ -1103,7 +928,7 @@ class Agent:
                 if scores[i] == maxnum and maxi != i:
                     find_another = True
             
-            if (not find_another) and (maxnum > 42): 
+            if not find_another and maxnum > 42: 
                 return maxi + 1
             else:
                 return -1
@@ -1121,21 +946,10 @@ class Agent:
     # Make sure to return your answer *as an integer* at the end of Solve().
     # Returning your answer as a string may cause your program to crash.
     def Solve(self,problem):
-    
-#         if (problem.name == 'Basic Problem B-01' or problem.name == 'Basic Problem B-02' or problem.name == 'Basic Problem B-03' or problem.name == 'Basic Problem B-04'):
-#             return -1
-#         if(problem.name !='Basic Problem C-08'):
-#             return -1;
-#         if (problem.problemSetName == 'Challenge Problems B' or problem.problemSetName == 'Challenge Problems C'):
-#             return -1
-        print (problem.name)
         Objectslen = []
-        
-
         self.__init__()
-        
-        
-        if(problem.problemType == "2x2"):
+            
+        if problem.problemType == "2x2":
             bool_oneObject = 1
             for figureName in problem.figures:
                 thisFigure = problem.figures[figureName]
@@ -1147,7 +961,7 @@ class Agent:
                     bool_oneObject = 0
             
             firstresult = self.SolveHelper(bool_oneObject, problem, 1)
-            if ( firstresult == -1):
+            if firstresult == -1:
                 return self.SolveHelper(bool_oneObject, problem, 2)
             else:
                 return firstresult
@@ -1155,7 +969,6 @@ class Agent:
             result3x3 = self.SolveHelper3x3(problem)
                 
             if result3x3 == -1:
-                print("SolveVisual")
                 return self.SolveVisual(problem) 
             else:
                 return result3x3       
